@@ -282,6 +282,7 @@ function showDetailsStep() {
     return;
   }
   elements.selectedTitle.textContent = "Enter details";
+  elements.backToTimes.hidden = false;
   elements.timeStep.hidden = true;
   elements.detailsStep.hidden = false;
   elements.detailsStep.classList.remove("step-enter");
@@ -291,6 +292,7 @@ function showDetailsStep() {
 
 function showTimeStep() {
   elements.selectedTitle.textContent = "Select a date and time";
+  elements.backToTimes.hidden = true;
   elements.timeStep.hidden = false;
   elements.detailsStep.hidden = true;
   elements.timeStep.classList.remove("step-enter");

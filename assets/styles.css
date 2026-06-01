@@ -387,7 +387,10 @@ button {
 }
 
 .back-button {
-  margin-bottom: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: -4px;
   padding: 6px 0;
   border: 0;
   color: var(--booking-muted);
