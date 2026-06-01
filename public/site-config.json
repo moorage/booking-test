@@ -1,0 +1,46 @@
+{
+  "appointmentTypes": [
+    {
+      "autoConfirm": false,
+      "bufferAfterMinutes": 10,
+      "bufferBeforeMinutes": 10,
+      "durationMinutes": 30,
+      "id": "intro-call",
+      "minimumNoticeMinutes": 60,
+      "name": "30 minute meeting",
+      "slug": "thirty-minute-meeting",
+      "summary": "A focused 30 minute meeting with Matt."
+    }
+  ],
+  "copy": {
+    "privacyNote": "Your details are encrypted before they leave this browser."
+  },
+  "encryption": {
+    "keyID": "demo-key-v1",
+    "publicKeyJwk": {
+      "crv": "P-256",
+      "ext": true,
+      "kty": "EC",
+      "x": "xT-soGCN1PNjTQzqvSaNNggT4GpjJJAfANoTyHwqtYY",
+      "y": "P50ij65h03a6WOC9UriwoD_pmnUIVuZAnp5u5ZJ8hmc"
+    }
+  },
+  "inbox": {
+    "id": "demo-inbox",
+    "url": "https://live-booking-relay-vercel.vercel.app"
+  },
+  "profile": {
+    "pageSubtitle": "Choose a time and send a private request.",
+    "pageTitle": "Request time with Matt",
+    "publicName": "Matt Moore",
+    "timeZone": "America/Los_Angeles"
+  },
+  "share": {
+    "id": "intro-call"
+  },
+  "theme": {
+    "accentColor": "#0F766E",
+    "backgroundColor": "#F7F3EA",
+    "textColor": "#171717"
+  }
+}

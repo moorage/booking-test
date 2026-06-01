@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-referrer">
+    <title>Request time</title>
+    <link rel="stylesheet" href="assets/styles.css">
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="hero">
+        <p class="privacy-note" data-copy="privacyNote">Your details are encrypted before they leave this browser.</p>
+        <h1 data-profile="pageTitle">Request time</h1>
+        <p data-profile="pageSubtitle">Choose a time and send a private request.</p>
+      </header>
+
+      <section class="appointment-layout" aria-label="Appointment types">
+        <div>
+          <h2>Choose a time</h2>
+          <div id="appointment-list" class="appointment-list"></div>
+        </div>
+
+        <form id="request-form" class="request-panel" hidden>
+          <h2 id="selected-title">Choose a time</h2>
+          <p id="selected-detail" class="muted"></p>
+
+          <label for="slot-select">Time</label>
+          <select id="slot-select" name="slot" required></select>
+          <p id="time-zone-label" class="muted">Times shown in your time zone</p>
+
+          <label for="visitor-name">Name</label>
+          <input id="visitor-name" name="name" autocomplete="name" required>
+
+          <label for="visitor-email">Email</label>
+          <input id="visitor-email" name="email" autocomplete="email" type="email" required>
+
+          <label for="visitor-topic">What should we cover?</label>
+          <textarea id="visitor-topic" name="topic" rows="4"></textarea>
+
+          <button id="submit-request" type="submit">Send request</button>
+          <p id="form-status" class="form-status" role="status"></p>
+        </form>
+      </section>
+    </main>
+
+    <script src="assets/app.js" type="module"></script>
+  </body>
+</html>

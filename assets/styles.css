@@ -1,0 +1,191 @@
+:root {
+  --booking-accent: #0f766e;
+  --booking-background: #f7f3ea;
+  --booking-surface: #fffdf8;
+  --booking-text: #171717;
+  --booking-muted: #5f615d;
+  --booking-border: #d8d0bf;
+  --booking-danger: #b42318;
+  --booking-radius: 8px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background:
+    linear-gradient(135deg, rgba(15, 118, 110, 0.12), transparent 34rem),
+    var(--booking-background);
+  color: var(--booking-text);
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.page-shell {
+  width: min(1120px, calc(100vw - 32px));
+  margin: 0 auto;
+  padding: 48px 0;
+}
+
+.hero {
+  display: grid;
+  gap: 10px;
+  min-height: 34vh;
+  align-content: end;
+  padding-bottom: 40px;
+}
+
+.hero h1 {
+  max-width: 760px;
+  margin: 0;
+  font-size: clamp(2.5rem, 6vw, 5.5rem);
+  line-height: 0.96;
+  letter-spacing: 0;
+}
+
+.hero p {
+  max-width: 620px;
+  margin: 0;
+  color: var(--booking-muted);
+  font-size: 1.1rem;
+}
+
+.privacy-note {
+  width: fit-content;
+  padding: 6px 10px;
+  border: 1px solid var(--booking-border);
+  border-radius: 999px;
+  background: rgba(255, 253, 248, 0.74);
+}
+
+.appointment-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+  gap: 22px;
+  align-items: start;
+}
+
+.appointment-layout h2 {
+  margin: 0 0 14px;
+  font-size: 1.35rem;
+}
+
+.appointment-list {
+  display: grid;
+  gap: 12px;
+}
+
+.appointment-card,
+.request-panel {
+  border: 1px solid var(--booking-border);
+  border-radius: var(--booking-radius);
+  background: color-mix(in srgb, var(--booking-surface) 94%, white);
+  box-shadow: 0 10px 28px rgba(23, 23, 23, 0.08);
+}
+
+.appointment-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  width: 100%;
+  padding: 18px;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+}
+
+.appointment-card strong,
+.appointment-card span {
+  display: block;
+}
+
+.appointment-card span,
+.muted {
+  color: var(--booking-muted);
+}
+
+.appointment-card:hover,
+.appointment-card:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--booking-accent) 28%, transparent);
+  border-color: var(--booking-accent);
+}
+
+.request-panel {
+  display: grid;
+  gap: 10px;
+  padding: 20px;
+  position: sticky;
+  top: 20px;
+}
+
+.request-panel[hidden] {
+  display: none;
+}
+
+.request-panel label {
+  font-weight: 700;
+}
+
+.request-panel input,
+.request-panel select,
+.request-panel textarea {
+  width: 100%;
+  border: 1px solid var(--booking-border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  background: #fff;
+  color: var(--booking-text);
+}
+
+.request-panel button {
+  margin-top: 6px;
+  border: 0;
+  border-radius: 6px;
+  padding: 12px 14px;
+  background: var(--booking-accent);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.request-panel button:disabled {
+  cursor: progress;
+  opacity: 0.72;
+}
+
+.form-status {
+  min-height: 1.4em;
+  margin: 0;
+  color: var(--booking-muted);
+}
+
+.form-status[data-kind="error"] {
+  color: var(--booking-danger);
+}
+
+@media (max-width: 760px) {
+  .page-shell {
+    width: min(100vw - 24px, 680px);
+    padding: 28px 0;
+  }
+
+  .hero {
+    min-height: 28vh;
+  }
+
+  .appointment-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .request-panel {
+    position: static;
+  }
+}

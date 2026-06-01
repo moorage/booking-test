@@ -1,0 +1,17 @@
+{
+  "pageSubtitle": "Choose a time and send a private request.",
+  "privacyNote": "Your details are encrypted before they leave this browser.",
+  "chooseATime": "Choose a time",
+  "visitorNameLabel": "Name",
+  "visitorEmailLabel": "Email",
+  "topicQuestionLabel": "What should we cover?",
+  "sendRequest": "Send request",
+  "bookThisTime": "Book this time",
+  "manualSuccessTitle": "Request sent",
+  "manualSuccessBody": "You will get a confirmation after this time is reviewed.",
+  "autoConfirmSuccessTitle": "Booked",
+  "autoConfirmSuccessBody": "A calendar invite is on the way.",
+  "expiredSlotMessage": "This time is no longer available. Choose another time.",
+  "inboxUnavailableMessage": "Requests are not available right now. Try again later.",
+  "encryptionUnavailableMessage": "This browser cannot encrypt the request. Try another browser."
+}

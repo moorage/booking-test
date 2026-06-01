@@ -1,0 +1,14 @@
+{
+  "expiresAt": "2026-06-08T07:50:42Z",
+  "generatedAt": "2026-06-01T07:50:42Z",
+  "slots": [
+    {
+      "appointmentTypeID": "intro-call",
+      "endsAt": "2026-06-02T17:30:00Z",
+      "expiresAt": "2026-06-02T17:00:00Z",
+      "id": "thirty-minute-meeting-1780419600",
+      "startsAt": "2026-06-02T17:00:00Z",
+      "token": "sample-public-slot-token-thirty-minute-meeting-1780419600"
+    }
+  ]
+}
