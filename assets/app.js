@@ -299,18 +299,43 @@ function showTimeStep() {
 
 function addGuestField() {
   state.guestCount += 1;
+  const field = document.createElement("div");
+  field.className = "guest-field";
+
   const label = document.createElement("label");
   label.className = "guest-label";
   label.setAttribute("for", `guest-email-${state.guestCount}`);
   label.textContent = `Guest ${state.guestCount} email`;
+
+  const controls = document.createElement("div");
+  controls.className = "guest-input-row";
+
   const input = document.createElement("input");
   input.id = `guest-email-${state.guestCount}`;
   input.name = "guestEmails";
   input.type = "email";
   input.autocomplete = "email";
   input.placeholder = "guest@example.com";
-  elements.guestFields.append(label, input);
+
+  const removeButton = document.createElement("button");
+  removeButton.className = "guest-remove-button";
+  removeButton.type = "button";
+  removeButton.textContent = "Remove";
+  removeButton.setAttribute("aria-label", `Remove guest ${state.guestCount}`);
+  removeButton.addEventListener("click", () => {
+    field.remove();
+    elements.addGuest.focus();
+  });
+
+  controls.append(input, removeButton);
+  field.append(label, controls);
+  elements.guestFields.append(field);
   input.focus();
+}
+
+function clearGuestFields() {
+  elements.guestFields.replaceChildren();
+  state.guestCount = 0;
 }
 
 function changeVisibleMonth(delta) {
@@ -504,6 +529,7 @@ async function submitRequest(event) {
 
     showStatus(state.selectedAppointment.autoConfirm ? "A calendar invite is on the way." : "You will get a confirmation after this time is reviewed.");
     elements.form.reset();
+    clearGuestFields();
     state.selectedSlotID = "";
     elements.slotSelect.value = "";
     renderTimes();
