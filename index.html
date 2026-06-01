@@ -25,20 +25,53 @@
           <h2 id="selected-title">Choose a time</h2>
           <p id="selected-detail" class="muted"></p>
 
-          <label for="slot-select">Time</label>
-          <select id="slot-select" name="slot" required></select>
-          <p id="time-zone-label" class="muted">Times shown in your time zone</p>
+          <section id="time-step" class="time-step" aria-label="Select a date and time">
+            <div class="scheduler-grid">
+              <section class="calendar-panel" aria-label="Available dates">
+                <div class="calendar-header">
+                  <button id="previous-month" class="icon-button" type="button" aria-label="Previous month">&lt;</button>
+                  <h3 id="calendar-month">Month</h3>
+                  <button id="next-month" class="icon-button" type="button" aria-label="Next month">&gt;</button>
+                </div>
+                <div class="calendar-weekdays" aria-hidden="true">
+                  <span>Sun</span>
+                  <span>Mon</span>
+                  <span>Tue</span>
+                  <span>Wed</span>
+                  <span>Thu</span>
+                  <span>Fri</span>
+                  <span>Sat</span>
+                </div>
+                <div id="calendar-grid" class="calendar-grid"></div>
+                <label class="timezone-label" for="time-zone-select">Time zone</label>
+                <select id="time-zone-select" class="timezone-select"></select>
+              </section>
 
-          <label for="visitor-name">Name</label>
-          <input id="visitor-name" name="name" autocomplete="name" required>
+              <section class="time-panel" aria-label="Available times">
+                <h3 id="selected-date-heading">Select a date</h3>
+                <div id="time-list" class="time-list"></div>
+              </section>
+            </div>
+            <input id="slot-select" name="slot" type="hidden" required>
+          </section>
 
-          <label for="visitor-email">Email</label>
-          <input id="visitor-email" name="email" autocomplete="email" type="email" required>
+          <section id="details-step" class="details-step" hidden>
+            <button id="back-to-times" class="back-button" type="button">Back</button>
 
-          <label for="visitor-topic">What should we cover?</label>
-          <textarea id="visitor-topic" name="topic" rows="4"></textarea>
+            <label for="visitor-name">Name</label>
+            <input id="visitor-name" name="name" autocomplete="name" required>
 
-          <button id="submit-request" type="submit">Send request</button>
+            <label for="visitor-email">Email</label>
+            <input id="visitor-email" name="email" autocomplete="email" type="email" required>
+
+            <div id="guest-fields" class="guest-fields"></div>
+            <button id="add-guest" class="secondary-button" type="button">Add guests</button>
+
+            <label for="visitor-topic">Please share anything that will help prepare for our meeting.</label>
+            <textarea id="visitor-topic" name="topic" rows="4"></textarea>
+
+            <button id="submit-request" type="submit">Send request</button>
+          </section>
           <p id="form-status" class="form-status" role="status"></p>
         </form>
       </section>

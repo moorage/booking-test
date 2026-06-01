@@ -2,6 +2,11 @@ const state = {
   config: null,
   slots: [],
   selectedAppointment: null,
+  selectedDateKey: "",
+  selectedSlotID: "",
+  selectedTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
+  visibleMonth: null,
+  guestCount: 0,
 };
 
 const elements = {
@@ -9,8 +14,19 @@ const elements = {
   form: document.querySelector("#request-form"),
   selectedTitle: document.querySelector("#selected-title"),
   selectedDetail: document.querySelector("#selected-detail"),
+  timeStep: document.querySelector("#time-step"),
+  detailsStep: document.querySelector("#details-step"),
+  calendarMonth: document.querySelector("#calendar-month"),
+  calendarGrid: document.querySelector("#calendar-grid"),
+  previousMonth: document.querySelector("#previous-month"),
+  nextMonth: document.querySelector("#next-month"),
+  selectedDateHeading: document.querySelector("#selected-date-heading"),
+  timeList: document.querySelector("#time-list"),
+  timeZoneSelect: document.querySelector("#time-zone-select"),
   slotSelect: document.querySelector("#slot-select"),
-  timeZoneLabel: document.querySelector("#time-zone-label"),
+  backToTimes: document.querySelector("#back-to-times"),
+  addGuest: document.querySelector("#add-guest"),
+  guestFields: document.querySelector("#guest-fields"),
   submitButton: document.querySelector("#submit-request"),
   formStatus: document.querySelector("#form-status"),
 };
@@ -33,7 +49,13 @@ async function main() {
   state.slots = availability.slots || [];
   applyConfig(config);
   renderAppointments(config.appointmentTypes || []);
+  renderTimeZones();
   elements.form.addEventListener("submit", submitRequest);
+  elements.previousMonth.addEventListener("click", () => changeVisibleMonth(-1));
+  elements.nextMonth.addEventListener("click", () => changeVisibleMonth(1));
+  elements.timeZoneSelect.addEventListener("change", handleTimeZoneChange);
+  elements.backToTimes.addEventListener("click", showTimeStep);
+  elements.addGuest.addEventListener("click", addGuestField);
 }
 
 async function fetchJSON(path) {
@@ -77,32 +99,301 @@ function renderAppointments(appointmentTypes) {
 
 function selectAppointment(appointmentType) {
   state.selectedAppointment = appointmentType;
+  state.selectedSlotID = "";
+  state.selectedDateKey = firstAvailableDateKey(appointmentType.id);
+  state.visibleMonth = monthFromDateKey(state.selectedDateKey) || monthFromDate(new Date());
   elements.form.hidden = false;
-  elements.selectedTitle.textContent = appointmentType.name;
-  elements.selectedDetail.textContent = appointmentType.summary || "";
-  elements.submitButton.textContent = appointmentType.autoConfirm ? "Book this time" : "Send request";
-  elements.timeZoneLabel.textContent = `Times shown in ${Intl.DateTimeFormat().resolvedOptions().timeZone}`;
-  renderSlots(appointmentType.id);
+  elements.selectedTitle.textContent = "Select a date and time";
+  elements.selectedDetail.textContent = `${appointmentType.name} - ${appointmentType.durationMinutes} minutes`;
+  elements.submitButton.textContent = appointmentType.autoConfirm ? "Schedule event" : "Send request";
+  showTimeStep();
+  renderCalendar();
+  renderTimes();
   showStatus("");
 }
 
-function renderSlots(appointmentTypeID) {
-  const slots = state.slots.filter((slot) => slot.appointmentTypeID === appointmentTypeID);
-  elements.slotSelect.replaceChildren();
-  for (const slot of slots) {
+function renderTimeZones() {
+  const zones = supportedTimeZones();
+  elements.timeZoneSelect.replaceChildren();
+  for (const zone of zones) {
     const option = document.createElement("option");
-    option.value = slot.id;
-    option.textContent = new Intl.DateTimeFormat(undefined, {
-      dateStyle: "medium",
-      timeStyle: "short",
-    }).format(new Date(slot.startsAt));
-    elements.slotSelect.append(option);
+    option.value = zone;
+    option.textContent = timeZoneLabel(zone);
+    elements.timeZoneSelect.append(option);
   }
+  if (!zones.includes(state.selectedTimeZone)) {
+    const option = document.createElement("option");
+    option.value = state.selectedTimeZone;
+    option.textContent = timeZoneLabel(state.selectedTimeZone);
+    elements.timeZoneSelect.prepend(option);
+  }
+  elements.timeZoneSelect.value = state.selectedTimeZone;
+}
+
+function supportedTimeZones() {
+  if (typeof Intl.supportedValuesOf === "function") {
+    return Intl.supportedValuesOf("timeZone");
+  }
+  return [
+    "America/Los_Angeles",
+    "America/Denver",
+    "America/Chicago",
+    "America/New_York",
+    "Europe/London",
+    "Europe/Paris",
+    "Asia/Tokyo",
+    "Australia/Sydney",
+    "UTC",
+  ];
+}
+
+function handleTimeZoneChange() {
+  state.selectedTimeZone = elements.timeZoneSelect.value;
+  state.selectedSlotID = "";
+  state.selectedDateKey = firstAvailableDateKey(state.selectedAppointment.id);
+  state.visibleMonth = monthFromDateKey(state.selectedDateKey) || monthFromDate(new Date());
+  renderCalendar();
+  renderTimes();
+}
+
+function renderCalendar() {
+  const slotsByDate = slotsGroupedByDate();
+  const month = state.visibleMonth || monthFromDate(new Date());
+  elements.calendarMonth.textContent = new Intl.DateTimeFormat(undefined, {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(month.year, month.month, 1)));
+  elements.calendarGrid.replaceChildren();
+
+  const firstDay = new Date(Date.UTC(month.year, month.month, 1));
+  const firstWeekday = firstDay.getUTCDay();
+  const dayCount = new Date(Date.UTC(month.year, month.month + 1, 0)).getUTCDate();
+  for (let index = 0; index < firstWeekday; index += 1) {
+    const spacer = document.createElement("span");
+    spacer.className = "calendar-day spacer";
+    elements.calendarGrid.append(spacer);
+  }
+
+  const todayKey = dateKeyInTimeZone(new Date(), state.selectedTimeZone);
+  for (let day = 1; day <= dayCount; day += 1) {
+    const key = dateKeyFromParts(month.year, month.month + 1, day);
+    const hasAvailability = slotsByDate.has(key);
+    const button = document.createElement("button");
+    button.className = "calendar-day";
+    button.type = "button";
+    button.textContent = String(day);
+    button.disabled = !hasAvailability;
+    button.dataset.available = String(hasAvailability);
+    button.dataset.selected = String(key === state.selectedDateKey);
+    button.dataset.today = String(key === todayKey);
+    button.setAttribute("aria-label", calendarDayLabel(key, hasAvailability, key === todayKey));
+    button.addEventListener("click", () => {
+      state.selectedDateKey = key;
+      state.selectedSlotID = "";
+      renderCalendar();
+      renderTimes();
+    });
+    elements.calendarGrid.append(button);
+  }
+}
+
+function renderTimes() {
+  const slots = slotsForSelectedDate();
+  elements.selectedDateHeading.textContent = state.selectedDateKey
+    ? formatDateHeading(state.selectedDateKey)
+    : "Select a date";
+  elements.timeList.replaceChildren();
+
+  if (slots.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "empty-times";
+    empty.textContent = "No times are available for this date.";
+    elements.timeList.append(empty);
+    return;
+  }
+
+  for (const slot of slots) {
+    const row = document.createElement("div");
+    row.className = "time-choice";
+    row.dataset.selected = String(slot.id === state.selectedSlotID);
+
+    const timeButton = document.createElement("button");
+    timeButton.className = "time-button";
+    timeButton.type = "button";
+    timeButton.textContent = formatTime(slot.startsAt);
+    timeButton.addEventListener("click", () => selectSlot(slot.id));
+
+    const nextButton = document.createElement("button");
+    nextButton.className = "next-time-button";
+    nextButton.type = "button";
+    nextButton.textContent = "Next";
+    nextButton.addEventListener("click", showDetailsStep);
+
+    row.append(timeButton, nextButton);
+    elements.timeList.append(row);
+  }
+}
+
+function selectSlot(slotID) {
+  state.selectedSlotID = slotID;
+  elements.slotSelect.value = slotID;
+  renderTimes();
+  showStatus("");
+}
+
+function showDetailsStep() {
+  if (!state.selectedSlotID) {
+    showStatus("Choose a time before continuing.", "error");
+    return;
+  }
+  elements.selectedTitle.textContent = "Enter details";
+  elements.timeStep.hidden = true;
+  elements.detailsStep.hidden = false;
+  elements.detailsStep.classList.remove("step-enter");
+  requestAnimationFrame(() => elements.detailsStep.classList.add("step-enter"));
+  showStatus(`Selected ${formatSelectedSlot()}.`);
+}
+
+function showTimeStep() {
+  elements.selectedTitle.textContent = "Select a date and time";
+  elements.timeStep.hidden = false;
+  elements.detailsStep.hidden = true;
+  elements.timeStep.classList.remove("step-enter");
+  requestAnimationFrame(() => elements.timeStep.classList.add("step-enter"));
+}
+
+function addGuestField() {
+  state.guestCount += 1;
+  const label = document.createElement("label");
+  label.className = "guest-label";
+  label.setAttribute("for", `guest-email-${state.guestCount}`);
+  label.textContent = `Guest ${state.guestCount} email`;
+  const input = document.createElement("input");
+  input.id = `guest-email-${state.guestCount}`;
+  input.name = "guestEmails";
+  input.type = "email";
+  input.autocomplete = "email";
+  input.placeholder = "guest@example.com";
+  elements.guestFields.append(label, input);
+  input.focus();
+}
+
+function changeVisibleMonth(delta) {
+  const current = state.visibleMonth || monthFromDate(new Date());
+  state.visibleMonth = normalizeMonth(current.year, current.month + delta);
+  renderCalendar();
+  renderTimes();
+}
+
+function firstAvailableDateKey(appointmentTypeID) {
+  const keys = slotsForAppointment(appointmentTypeID)
+    .map((slot) => dateKeyInTimeZone(new Date(slot.startsAt), state.selectedTimeZone))
+    .sort();
+  return keys[0] || "";
+}
+
+function slotsForAppointment(appointmentTypeID = state.selectedAppointment?.id) {
+  return state.slots
+    .filter((slot) => slot.appointmentTypeID === appointmentTypeID)
+    .sort((first, second) => new Date(first.startsAt) - new Date(second.startsAt));
+}
+
+function slotsGroupedByDate() {
+  const grouped = new Map();
+  for (const slot of slotsForAppointment()) {
+    const key = dateKeyInTimeZone(new Date(slot.startsAt), state.selectedTimeZone);
+    if (!grouped.has(key)) grouped.set(key, []);
+    grouped.get(key).push(slot);
+  }
+  return grouped;
+}
+
+function slotsForSelectedDate() {
+  return slotsGroupedByDate().get(state.selectedDateKey) || [];
+}
+
+function dateKeyInTimeZone(date, timeZone) {
+  const parts = dateParts(date, timeZone);
+  return dateKeyFromParts(parts.year, parts.month, parts.day);
+}
+
+function dateParts(date, timeZone) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone,
+  }).formatToParts(date);
+  return {
+    year: Number(parts.find((part) => part.type === "year").value),
+    month: Number(parts.find((part) => part.type === "month").value),
+    day: Number(parts.find((part) => part.type === "day").value),
+  };
+}
+
+function dateKeyFromParts(year, month, day) {
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+function monthFromDate(date) {
+  const parts = dateParts(date, state.selectedTimeZone);
+  return { year: parts.year, month: parts.month - 1 };
+}
+
+function monthFromDateKey(key) {
+  if (!key) return null;
+  const [year, month] = key.split("-").map(Number);
+  return { year, month: month - 1 };
+}
+
+function normalizeMonth(year, month) {
+  const normalized = new Date(Date.UTC(year, month, 1));
+  return { year: normalized.getUTCFullYear(), month: normalized.getUTCMonth() };
+}
+
+function calendarDayLabel(key, hasAvailability, isToday) {
+  const label = formatDateHeading(key);
+  const status = hasAvailability ? "available" : "unavailable";
+  return isToday ? `${label}, today, ${status}` : `${label}, ${status}`;
+}
+
+function formatDateHeading(key) {
+  const [year, month, day] = key.split("-").map(Number);
+  return new Intl.DateTimeFormat(undefined, {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(year, month - 1, day)));
+}
+
+function formatTime(isoString) {
+  return new Intl.DateTimeFormat(undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: state.selectedTimeZone,
+  }).format(new Date(isoString));
+}
+
+function formatSelectedSlot() {
+  const slot = state.slots.find((candidate) => candidate.id === state.selectedSlotID);
+  return slot ? `${formatDateHeading(state.selectedDateKey)} at ${formatTime(slot.startsAt)}` : "a time";
+}
+
+function timeZoneLabel(zone) {
+  const label = zone.replaceAll("_", " ");
+  const parts = new Intl.DateTimeFormat(undefined, {
+    timeZone: zone,
+    timeZoneName: "short",
+  }).formatToParts(new Date());
+  const shortName = parts.find((part) => part.type === "timeZoneName")?.value;
+  return shortName ? `${label} (${shortName})` : label;
 }
 
 async function submitRequest(event) {
   event.preventDefault();
-  const slot = state.slots.find((candidate) => candidate.id === elements.slotSelect.value);
+  const slot = state.slots.find((candidate) => candidate.id === state.selectedSlotID);
   if (!slot) {
     showStatus("This time is no longer available. Choose another time.", "error");
     return;
@@ -121,9 +412,10 @@ async function submitRequest(event) {
       visitor: {
         name: String(formData.get("name") || ""),
         email: String(formData.get("email") || ""),
+        guestEmails: formData.getAll("guestEmails").map((email) => String(email)).filter(Boolean),
         topic: String(formData.get("topic") || ""),
       },
-      browserTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      browserTimeZone: state.selectedTimeZone,
       createdAt: new Date().toISOString(),
     };
 
@@ -141,6 +433,10 @@ async function submitRequest(event) {
 
     showStatus(state.selectedAppointment.autoConfirm ? "A calendar invite is on the way." : "You will get a confirmation after this time is reviewed.");
     elements.form.reset();
+    state.selectedSlotID = "";
+    elements.slotSelect.value = "";
+    renderTimes();
+    showTimeStep();
   } catch (error) {
     showStatus(error.message || "Requests are not available right now. Try again later.", "error");
   } finally {
