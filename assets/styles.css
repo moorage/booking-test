@@ -116,7 +116,8 @@ button {
 }
 
 .appointment-card:hover,
-.appointment-card:focus-visible {
+.appointment-card:focus-visible,
+.appointment-card.selected {
   outline: 3px solid color-mix(in srgb, var(--booking-accent) 22%, transparent);
   border-color: var(--booking-accent);
 }

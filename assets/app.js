@@ -48,7 +48,8 @@ async function main() {
   state.config = config;
   state.slots = availability.slots || [];
   applyConfig(config);
-  renderAppointments(config.appointmentTypes || []);
+  const appointmentTypes = config.appointmentTypes || [];
+  renderAppointments(appointmentTypes);
   renderTimeZones();
   elements.form.addEventListener("submit", submitRequest);
   elements.previousMonth.addEventListener("click", () => changeVisibleMonth(-1));
@@ -56,6 +57,10 @@ async function main() {
   elements.timeZoneSelect.addEventListener("change", handleTimeZoneChange);
   elements.backToTimes.addEventListener("click", showTimeStep);
   elements.addGuest.addEventListener("click", addGuestField);
+  const linkedAppointment = linkedAppointmentType(appointmentTypes);
+  if (linkedAppointment) {
+    selectAppointment(linkedAppointment);
+  }
 }
 
 async function fetchJSON(path) {
@@ -82,6 +87,9 @@ function renderAppointments(appointmentTypes) {
     const button = document.createElement("button");
     button.className = "appointment-card";
     button.type = "button";
+    button.dataset.appointmentId = appointmentType.id;
+    button.dataset.appointmentSlug = appointmentType.slug;
+    button.setAttribute("aria-pressed", "false");
     button.innerHTML = `
       <span>
         <strong></strong>
@@ -109,7 +117,25 @@ function selectAppointment(appointmentType) {
   showTimeStep();
   renderCalendar();
   renderTimes();
+  updateSelectedAppointmentCard();
   showStatus("");
+}
+
+function linkedAppointmentType(appointmentTypes) {
+  const value = new URLSearchParams(window.location.search).get("appointment");
+  if (!value) {
+    return null;
+  }
+
+  return appointmentTypes.find((appointmentType) => appointmentType.slug === value || appointmentType.id === value) || null;
+}
+
+function updateSelectedAppointmentCard() {
+  for (const button of elements.appointmentList.querySelectorAll(".appointment-card")) {
+    const isSelected = button.dataset.appointmentId === state.selectedAppointment?.id;
+    button.classList.toggle("selected", isSelected);
+    button.setAttribute("aria-pressed", isSelected ? "true" : "false");
+  }
 }
 
 function renderTimeZones() {
