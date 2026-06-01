@@ -171,7 +171,7 @@ async function encryptRequest(plaintext, slot) {
   const nonce = crypto.getRandomValues(new Uint8Array(12));
   const encodedPlaintext = new TextEncoder().encode(JSON.stringify(plaintext));
   const ciphertext = await crypto.subtle.encrypt({ name: "AES-GCM", iv: nonce }, aesKey, encodedPlaintext);
-  const ephemeralPublicKeyJwk = await crypto.subtle.exportKey("jwk", ephemeralKeyPair.publicKey);
+  const ephemeralPublicKeyJwk = publicECDHJwk(await crypto.subtle.exportKey("jwk", ephemeralKeyPair.publicKey));
 
   return {
     schemaVersion: 1,
@@ -194,6 +194,15 @@ function base64URL(bytes) {
     binary += String.fromCharCode(byte);
   }
   return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+
+function publicECDHJwk(jwk) {
+  return {
+    kty: jwk.kty,
+    crv: jwk.crv,
+    x: jwk.x,
+    y: jwk.y,
+  };
 }
 
 function showStatus(message, kind = "info") {
