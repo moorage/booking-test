@@ -243,6 +243,7 @@ function renderTimes() {
   for (const slot of slots) {
     const row = document.createElement("div");
     row.className = "time-choice";
+    row.dataset.slotId = slot.id;
     row.dataset.selected = String(slot.id === state.selectedSlotID);
 
     const timeButton = document.createElement("button");
@@ -265,8 +266,14 @@ function renderTimes() {
 function selectSlot(slotID) {
   state.selectedSlotID = slotID;
   elements.slotSelect.value = slotID;
-  renderTimes();
+  updateSelectedTimeChoice();
   showStatus("");
+}
+
+function updateSelectedTimeChoice() {
+  for (const row of elements.timeList.querySelectorAll(".time-choice")) {
+    row.dataset.selected = String(row.dataset.slotId === state.selectedSlotID);
+  }
 }
 
 function showDetailsStep() {
