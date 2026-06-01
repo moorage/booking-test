@@ -14,6 +14,7 @@ const elements = {
   form: document.querySelector("#request-form"),
   selectedTitle: document.querySelector("#selected-title"),
   selectedDetail: document.querySelector("#selected-detail"),
+  selectedTimeSummary: document.querySelector("#selected-time-summary"),
   timeStep: document.querySelector("#time-step"),
   detailsStep: document.querySelector("#details-step"),
   calendarMonth: document.querySelector("#calendar-month"),
@@ -282,12 +283,13 @@ function showDetailsStep() {
     return;
   }
   elements.selectedTitle.textContent = "Enter details";
+  elements.selectedTimeSummary.textContent = `Selected ${formatSelectedSlot()}.`;
   elements.backToTimes.hidden = false;
   elements.timeStep.hidden = true;
   elements.detailsStep.hidden = false;
   elements.detailsStep.classList.remove("step-enter");
   requestAnimationFrame(() => elements.detailsStep.classList.add("step-enter"));
-  showStatus(`Selected ${formatSelectedSlot()}.`);
+  showStatus("");
 }
 
 function showTimeStep() {

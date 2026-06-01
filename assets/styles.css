@@ -370,6 +370,13 @@ button {
   resize: vertical;
 }
 
+.selected-time-summary {
+  margin: 2px 0 4px;
+  color: var(--booking-text);
+  font-size: 1.13rem;
+  font-weight: 700;
+}
+
 .request-panel input:focus,
 .request-panel textarea:focus {
   border-color: var(--booking-accent);
