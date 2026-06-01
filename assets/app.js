@@ -159,6 +159,7 @@ function handleTimeZoneChange() {
 function renderCalendar() {
   const slotsByDate = slotsGroupedByDate();
   const month = state.visibleMonth || monthFromDate(new Date());
+  updateMonthNavigation(month);
   elements.calendarMonth.textContent = new Intl.DateTimeFormat(undefined, {
     month: "long",
     year: "numeric",
@@ -281,9 +282,42 @@ function addGuestField() {
 
 function changeVisibleMonth(delta) {
   const current = state.visibleMonth || monthFromDate(new Date());
-  state.visibleMonth = normalizeMonth(current.year, current.month + delta);
+  const target = normalizeMonth(current.year, current.month + delta);
+  if (!monthHasBookableEventsInDirection(current, delta)) {
+    return;
+  }
+
+  state.visibleMonth = target;
   renderCalendar();
   renderTimes();
+}
+
+function updateMonthNavigation(month) {
+  const hasPrevious = monthHasBookableEventsInDirection(month, -1);
+  const hasNext = monthHasBookableEventsInDirection(month, 1);
+  elements.previousMonth.disabled = !hasPrevious;
+  elements.nextMonth.disabled = !hasNext;
+  elements.previousMonth.setAttribute(
+    "aria-label",
+    hasPrevious ? "Previous month" : "No earlier bookable months"
+  );
+  elements.nextMonth.setAttribute(
+    "aria-label",
+    hasNext ? "Next month" : "No later bookable months"
+  );
+}
+
+function monthHasBookableEventsInDirection(month, delta) {
+  const visibleIndex = monthIndex(month);
+  return availableMonthIndexes().some((availableIndex) =>
+    delta < 0 ? availableIndex < visibleIndex : availableIndex > visibleIndex
+  );
+}
+
+function availableMonthIndexes() {
+  return slotsForAppointment()
+    .map((slot) => monthFromDate(new Date(slot.startsAt)))
+    .map(monthIndex);
 }
 
 function firstAvailableDateKey(appointmentTypeID) {
@@ -350,6 +384,10 @@ function monthFromDateKey(key) {
 function normalizeMonth(year, month) {
   const normalized = new Date(Date.UTC(year, month, 1));
   return { year: normalized.getUTCFullYear(), month: normalized.getUTCMonth() };
+}
+
+function monthIndex(month) {
+  return month.year * 12 + month.month;
 }
 
 function calendarDayLabel(key, hasAvailability, isToday) {
