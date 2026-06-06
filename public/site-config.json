@@ -1,15 +1,122 @@
 {
   "appointmentTypes": [
     {
+      "autoConfirm": true,
+      "durationMinutes": 45,
+      "id": "intro-call",
+      "location": {
+        "details": "",
+        "mode": "phone"
+      },
+      "name": "45m Intro call",
+      "slug": "45m-intro-call",
+      "summary": "A focused first conversation.",
+      "weeklyHours": [
+        {
+          "weekday": 2,
+          "windows": [
+            {
+              "endMinuteOfDay": 990,
+              "startMinuteOfDay": 540
+            }
+          ]
+        },
+        {
+          "weekday": 3,
+          "windows": [
+            {
+              "endMinuteOfDay": 990,
+              "startMinuteOfDay": 540
+            }
+          ]
+        },
+        {
+          "weekday": 4,
+          "windows": [
+            {
+              "endMinuteOfDay": 990,
+              "startMinuteOfDay": 540
+            }
+          ]
+        },
+        {
+          "weekday": 5,
+          "windows": [
+            {
+              "endMinuteOfDay": 990,
+              "startMinuteOfDay": 540
+            }
+          ]
+        },
+        {
+          "weekday": 6,
+          "windows": [
+            {
+              "endMinuteOfDay": 990,
+              "startMinuteOfDay": 540
+            }
+          ]
+        }
+      ]
+    },
+    {
       "autoConfirm": false,
       "durationMinutes": 30,
-      "id": "intro-call",
-      "name": "30 minute meeting",
-      "slug": "thirty-minute-meeting",
-      "summary": "A focused 30 minute meeting with Matt.",
-      "minimumNoticeMinutes": 60,
-      "bufferBeforeMinutes": 10,
-      "bufferAfterMinutes": 10
+      "id": "new-meeting",
+      "location": {
+        "details": "",
+        "mode": "none"
+      },
+      "name": "30 min call",
+      "slug": "hellotherehowareyou",
+      "summary": "A focused conversation.",
+      "weeklyHours": [
+        {
+          "weekday": 2,
+          "windows": [
+            {
+              "endMinuteOfDay": 1020,
+              "startMinuteOfDay": 540
+            }
+          ]
+        },
+        {
+          "weekday": 3,
+          "windows": [
+            {
+              "endMinuteOfDay": 1020,
+              "startMinuteOfDay": 540
+            }
+          ]
+        },
+        {
+          "weekday": 4,
+          "windows": [
+            {
+              "endMinuteOfDay": 1020,
+              "startMinuteOfDay": 540
+            }
+          ]
+        },
+        {
+          "weekday": 5,
+          "windows": [
+            {
+              "endMinuteOfDay": 1020,
+              "startMinuteOfDay": 540
+            }
+          ]
+        },
+        {
+          "weekday": 6,
+          "windows": [
+            {
+              "endMinuteOfDay": 1020,
+              "startMinuteOfDay": 540
+            }
+          ]
+        }
+      ]
     }
   ],
   "copy": {
@@ -35,11 +142,14 @@
     "timeZone": "America/Los_Angeles"
   },
   "share": {
-    "id": "intro-call"
+    "id": "45m-intro-call"
   },
   "theme": {
     "accentColor": "#0F766E",
     "backgroundColor": "#F7F3EA",
     "textColor": "#171717"
+  },
+  "version": {
+    "fingerprint": "dacbb87430e56fc67a7b724044ab089dd3428cb192971e6afd198265cc4987e8"
   }
 }

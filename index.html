@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="assets/styles.css">
   </head>
   <body>
+    <p id="preview-banner" class="preview-banner" hidden>Local preview</p>
     <main class="page-shell">
       <header class="hero">
         <p class="privacy-note" data-copy="privacyNote">Your details are encrypted before they leave this browser.</p>
@@ -29,9 +30,9 @@
         <p data-profile="pageSubtitle">Choose a time and send a private request.</p>
       </header>
 
-      <section class="appointment-layout" aria-label="Appointment types">
-        <div>
-          <h2>Choose a time</h2>
+      <section id="appointment-layout" class="appointment-layout" aria-label="Appointment types">
+        <div id="appointment-rail" class="appointment-rail">
+          <h2 id="appointment-list-heading">Choose a time</h2>
           <div id="appointment-list" class="appointment-list"></div>
         </div>
 
@@ -58,8 +59,11 @@
                   <span>Sat</span>
                 </div>
                 <div id="calendar-grid" class="calendar-grid"></div>
-                <label class="timezone-label" for="time-zone-select">Time zone</label>
-                <select id="time-zone-select" class="timezone-select"></select>
+                <details class="timezone-control">
+                  <summary id="time-zone-summary">Times shown in your time zone</summary>
+                  <label class="timezone-label" for="time-zone-select">Time zone</label>
+                  <select id="time-zone-select" class="timezone-select"></select>
+                </details>
               </section>
 
               <section class="time-panel" aria-label="Available times">

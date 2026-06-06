@@ -20,6 +20,7 @@ Good prompts:
 
 - Change the visual style without changing encryption, request, or availability code.
 - Add a new appointment type by editing only Markdown.
+- Set appointment weekly hours by editing `weekly_hours`, for example `mon=09:00-16:30;tue=09:00-16:30;fri=closed`.
 - Change copy and colors while preserving the public artifact schema.
 - Explain what files are safe to edit and what files should not be touched.
 

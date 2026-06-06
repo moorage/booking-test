@@ -10,7 +10,9 @@ const state = {
 };
 
 const elements = {
+  appointmentLayout: document.querySelector("#appointment-layout"),
   appointmentList: document.querySelector("#appointment-list"),
+  appointmentListHeading: document.querySelector("#appointment-list-heading"),
   form: document.querySelector("#request-form"),
   selectedTitle: document.querySelector("#selected-title"),
   selectedDetail: document.querySelector("#selected-detail"),
@@ -23,6 +25,7 @@ const elements = {
   nextMonth: document.querySelector("#next-month"),
   selectedDateHeading: document.querySelector("#selected-date-heading"),
   timeList: document.querySelector("#time-list"),
+  timeZoneSummary: document.querySelector("#time-zone-summary"),
   timeZoneSelect: document.querySelector("#time-zone-select"),
   slotSelect: document.querySelector("#slot-select"),
   backToTimes: document.querySelector("#back-to-times"),
@@ -40,6 +43,8 @@ async function main() {
   if (!window.crypto?.subtle) {
     throw new Error("This browser cannot encrypt the request. Try another browser.");
   }
+
+  applyPreviewMode();
 
   const [config, availability] = await Promise.all([
     fetchJSON("public/site-config.json"),
@@ -61,6 +66,19 @@ async function main() {
   const linkedAppointment = linkedAppointmentType(appointmentTypes);
   if (linkedAppointment) {
     selectAppointment(linkedAppointment);
+  } else if (appointmentTypes.length === 1) {
+    selectAppointment(appointmentTypes[0]);
+  }
+}
+
+function applyPreviewMode() {
+  const isLocalPreview = window.location.protocol === "file:"
+    || window.location.hostname === "localhost"
+    || window.location.hostname === "127.0.0.1";
+  document.body.classList.toggle("local-preview", isLocalPreview);
+  const banner = document.querySelector("#preview-banner");
+  if (banner) {
+    banner.hidden = !isLocalPreview;
   }
 }
 
@@ -84,6 +102,23 @@ function applyConfig(config) {
 
 function renderAppointments(appointmentTypes) {
   elements.appointmentList.replaceChildren();
+  elements.appointmentLayout.dataset.appointmentCount = String(appointmentTypes.length);
+  elements.appointmentLayout.classList.toggle("single-appointment", appointmentTypes.length === 1);
+
+  if (appointmentTypes.length === 0) {
+    elements.form.hidden = true;
+    elements.appointmentListHeading.textContent = "Booking is paused";
+    const empty = document.createElement("div");
+    empty.className = "appointment-empty";
+    empty.innerHTML = `
+      <strong>No appointment types are available.</strong>
+      <span>Please check back later or contact the page owner directly.</span>
+    `;
+    elements.appointmentList.append(empty);
+    return;
+  }
+
+  elements.appointmentListHeading.textContent = appointmentTypes.length === 1 ? "Available appointment" : "Choose a time";
   for (const appointmentType of appointmentTypes) {
     const button = document.createElement("button");
     button.className = "appointment-card";
@@ -155,13 +190,13 @@ function renderTimeZones() {
     elements.timeZoneSelect.prepend(option);
   }
   elements.timeZoneSelect.value = state.selectedTimeZone;
+  updateTimeZoneSummary();
 }
 
 function supportedTimeZones() {
-  if (typeof Intl.supportedValuesOf === "function") {
-    return Intl.supportedValuesOf("timeZone");
-  }
-  return [
+  const preferredZones = [
+    state.selectedTimeZone,
+    state.config?.profile?.timeZone,
     "America/Los_Angeles",
     "America/Denver",
     "America/Chicago",
@@ -172,6 +207,7 @@ function supportedTimeZones() {
     "Australia/Sydney",
     "UTC",
   ];
+  return [...new Set(preferredZones.filter(Boolean))];
 }
 
 function handleTimeZoneChange() {
@@ -179,6 +215,7 @@ function handleTimeZoneChange() {
   state.selectedSlotID = "";
   state.selectedDateKey = firstAvailableDateKey(state.selectedAppointment.id);
   state.visibleMonth = monthFromDateKey(state.selectedDateKey) || monthFromDate(new Date());
+  updateTimeZoneSummary();
   renderCalendar();
   renderTimes();
 }
@@ -236,7 +273,9 @@ function renderTimes() {
   if (slots.length === 0) {
     const empty = document.createElement("p");
     empty.className = "empty-times";
-    empty.textContent = "No times are available for this date.";
+    empty.textContent = state.selectedDateKey
+      ? "No times are available for this date."
+      : "No upcoming times are available for this appointment type. Check back later or choose another option.";
     elements.timeList.append(empty);
     return;
   }
@@ -489,6 +528,10 @@ function timeZoneLabel(zone) {
   }).formatToParts(new Date());
   const shortName = parts.find((part) => part.type === "timeZoneName")?.value;
   return shortName ? `${label} (${shortName})` : label;
+}
+
+function updateTimeZoneSummary() {
+  elements.timeZoneSummary.textContent = `Times shown in ${timeZoneLabel(state.selectedTimeZone)}`;
 }
 
 async function submitRequest(event) {
