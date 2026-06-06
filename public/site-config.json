@@ -1,155 +1,155 @@
 {
-  "appointmentTypes": [
+  "appointmentTypes" : [
     {
-      "autoConfirm": true,
-      "durationMinutes": 45,
-      "id": "intro-call",
-      "location": {
-        "details": "",
-        "mode": "phone"
+      "autoConfirm" : true,
+      "durationMinutes" : 45,
+      "id" : "intro-call",
+      "location" : {
+        "details" : "",
+        "mode" : "phone"
       },
-      "name": "45m Intro call",
-      "slug": "45m-intro-call",
-      "summary": "A focused first conversation.",
-      "weeklyHours": [
+      "name" : "45m Intro call",
+      "slug" : "45m-intro-call",
+      "summary" : "A focused first conversation.",
+      "weeklyHours" : [
         {
-          "weekday": 2,
-          "windows": [
+          "weekday" : 2,
+          "windows" : [
             {
-              "endMinuteOfDay": 990,
-              "startMinuteOfDay": 540
+              "endMinuteOfDay" : 990,
+              "startMinuteOfDay" : 540
             }
           ]
         },
         {
-          "weekday": 3,
-          "windows": [
+          "weekday" : 3,
+          "windows" : [
             {
-              "endMinuteOfDay": 990,
-              "startMinuteOfDay": 540
+              "endMinuteOfDay" : 990,
+              "startMinuteOfDay" : 540
             }
           ]
         },
         {
-          "weekday": 4,
-          "windows": [
+          "weekday" : 4,
+          "windows" : [
             {
-              "endMinuteOfDay": 990,
-              "startMinuteOfDay": 540
+              "endMinuteOfDay" : 990,
+              "startMinuteOfDay" : 540
             }
           ]
         },
         {
-          "weekday": 5,
-          "windows": [
+          "weekday" : 5,
+          "windows" : [
             {
-              "endMinuteOfDay": 990,
-              "startMinuteOfDay": 540
+              "endMinuteOfDay" : 990,
+              "startMinuteOfDay" : 540
             }
           ]
         },
         {
-          "weekday": 6,
-          "windows": [
+          "weekday" : 6,
+          "windows" : [
             {
-              "endMinuteOfDay": 990,
-              "startMinuteOfDay": 540
+              "endMinuteOfDay" : 990,
+              "startMinuteOfDay" : 540
             }
           ]
         }
       ]
     },
     {
-      "autoConfirm": false,
-      "durationMinutes": 30,
-      "id": "new-meeting",
-      "location": {
-        "details": "",
-        "mode": "none"
+      "autoConfirm" : false,
+      "durationMinutes" : 30,
+      "id" : "new-meeting",
+      "location" : {
+        "details" : "",
+        "mode" : "none"
       },
-      "name": "30 min call",
-      "slug": "hellotherehowareyou",
-      "summary": "A focused conversation.",
-      "weeklyHours": [
+      "name" : "30 min call",
+      "slug" : "hellotherehowareyou",
+      "summary" : "A focused conversation.",
+      "weeklyHours" : [
         {
-          "weekday": 2,
-          "windows": [
+          "weekday" : 2,
+          "windows" : [
             {
-              "endMinuteOfDay": 1020,
-              "startMinuteOfDay": 540
+              "endMinuteOfDay" : 1020,
+              "startMinuteOfDay" : 540
             }
           ]
         },
         {
-          "weekday": 3,
-          "windows": [
+          "weekday" : 3,
+          "windows" : [
             {
-              "endMinuteOfDay": 1020,
-              "startMinuteOfDay": 540
+              "endMinuteOfDay" : 1020,
+              "startMinuteOfDay" : 540
             }
           ]
         },
         {
-          "weekday": 4,
-          "windows": [
+          "weekday" : 4,
+          "windows" : [
             {
-              "endMinuteOfDay": 1020,
-              "startMinuteOfDay": 540
+              "endMinuteOfDay" : 1020,
+              "startMinuteOfDay" : 540
             }
           ]
         },
         {
-          "weekday": 5,
-          "windows": [
+          "weekday" : 5,
+          "windows" : [
             {
-              "endMinuteOfDay": 1020,
-              "startMinuteOfDay": 540
+              "endMinuteOfDay" : 1020,
+              "startMinuteOfDay" : 540
             }
           ]
         },
         {
-          "weekday": 6,
-          "windows": [
+          "weekday" : 6,
+          "windows" : [
             {
-              "endMinuteOfDay": 1020,
-              "startMinuteOfDay": 540
+              "endMinuteOfDay" : 1020,
+              "startMinuteOfDay" : 540
             }
           ]
         }
       ]
     }
   ],
-  "copy": {
-    "privacyNote": "Your details are encrypted before they leave this browser."
+  "copy" : {
+    "privacyNote" : "Your details are encrypted before they leave this browser."
   },
-  "encryption": {
-    "keyID": "booking-key-4dd0911f-75de-49db-9023-360071558117",
-    "publicKeyJwk": {
-      "crv": "P-256",
-      "kty": "EC",
-      "x": "CRvd_pTL2b4hqIz1KbE9Ln-2UJj2ayJ0C6z3CDT_3So",
-      "y": "JX5jfEDmnQdstznUkU9bDnd-yKnQJq-QFHDkMVBAHVk"
+  "encryption" : {
+    "keyID" : "booking-key-4dd0911f-75de-49db-9023-360071558117",
+    "publicKeyJwk" : {
+      "crv" : "P-256",
+      "kty" : "EC",
+      "x" : "CRvd_pTL2b4hqIz1KbE9Ln-2UJj2ayJ0C6z3CDT_3So",
+      "y" : "JX5jfEDmnQdstznUkU9bDnd-yKnQJq-QFHDkMVBAHVk"
     }
   },
-  "inbox": {
-    "id": "inbox-4dd0911f-75de-49db-9023-360071558117",
-    "url": "https://live-booking-relay-vercel.vercel.app"
+  "inbox" : {
+    "id" : "inbox-4dd0911f-75de-49db-9023-360071558117",
+    "url" : "https://live-booking-relay-vercel.vercel.app"
   },
-  "profile": {
-    "pageSubtitle": "Choose a time and send a private request.",
-    "pageTitle": "Request time with Matt",
-    "publicName": "Matt Moore",
-    "timeZone": "America/Los_Angeles"
+  "profile" : {
+    "pageSubtitle" : "Choose a time and send a private request.",
+    "pageTitle" : "Request time with Matt",
+    "publicName" : "Matt Moore",
+    "timeZone" : "America/Los_Angeles"
   },
-  "share": {
-    "id": "45m-intro-call"
+  "share" : {
+    "id" : "45m-intro-call"
   },
-  "theme": {
-    "accentColor": "#0F766E",
-    "backgroundColor": "#F7F3EA",
-    "textColor": "#171717"
+  "theme" : {
+    "accentColor" : "#0F766E",
+    "backgroundColor" : "#F7F3EA",
+    "textColor" : "#171717"
   },
-  "version": {
-    "fingerprint": "dacbb87430e56fc67a7b724044ab089dd3428cb192971e6afd198265cc4987e8"
+  "version" : {
+    "fingerprint" : "8d10a29b8a5015ec415635f0c471c1bbc398ca6acfc83278d4ec1cc757101057"
   }
 }
