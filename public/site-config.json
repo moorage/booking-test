@@ -2,7 +2,7 @@
   "appointmentTypes" : [
     {
       "autoConfirm" : true,
-      "availabilityHorizonDays" : 14,
+      "availabilityHorizonDays" : 60,
       "durationMinutes" : 45,
       "id" : "intro-call",
       "location" : {
@@ -62,7 +62,7 @@
     },
     {
       "autoConfirm" : false,
-      "availabilityHorizonDays" : 14,
+      "availabilityHorizonDays" : 60,
       "durationMinutes" : 30,
       "id" : "new-meeting",
       "location" : {
@@ -152,6 +152,6 @@
     "textColor" : "#171717"
   },
   "version" : {
-    "fingerprint" : "3d2403150508ca7c2bb342352119669ea16e22d156609146547b87c2cf2baaf3"
+    "fingerprint" : "fe454fe4a82fed5efa5b489ef239120a1f276f3239507f461d65d3d9bb7198f5"
   }
 }
