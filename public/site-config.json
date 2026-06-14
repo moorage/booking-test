@@ -6,7 +6,7 @@
       "id" : "intro-call",
       "location" : {
         "details" : "",
-        "mode" : "phone"
+        "mode" : "google_meet"
       },
       "name" : "45m Intro call",
       "slug" : "45m-intro-call",
@@ -150,6 +150,6 @@
     "textColor" : "#171717"
   },
   "version" : {
-    "fingerprint" : "8d10a29b8a5015ec415635f0c471c1bbc398ca6acfc83278d4ec1cc757101057"
+    "fingerprint" : "fec174e232336a79318fe37511219a2fdad489fdb157aedac7c5c6f7385bca77"
   }
 }
